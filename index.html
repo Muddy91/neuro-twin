@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroTwin - AI Twins, Hyper-Responsive Graph Interactions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0A101F;
+            --secondary-bg: #10182C;
+            --accent-teal: #00F5D4;
+            --accent-cyan: #00C9FF;
+            --line-color: rgba(0, 245, 212, 0.3); /* More visible lines */
+            --text-light: #E6F1FF;
+            --text-medium: #A8B2D1;
+            --text-dark: #8892B0;
+            --card-bg: rgba(23, 42, 70, 0.8); 
+            --border-color: rgba(0, 245, 212, 0.25);
+            --glow-color-teal: rgba(0, 245, 212, 0.3);
+            --glow-color-cyan: rgba(0, 201, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at bottom right, var(--secondary-bg) 0%, var(--primary-bg) 70%);
+            color: var(--text-light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        .hero-gradient-dynamic, 
+        .section-gradient-dynamic,
+        .parallax-bg { 
+            position: relative; 
+        }
+        
+        .particle-canvas-bg { 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; 
+        }
+        .section-content-wrapper { 
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-outer-wrapper { 
+            position: relative;
+            margin-top: -8rem; 
+            padding-top: 8rem; 
+        }
+        .section-outer-wrapper:first-of-type { 
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .section-clipped {
+            position: relative; 
+            padding-top: 12rem; 
+            padding-bottom: 12rem; 
+        }
+
+        .section-clip-top > .section-clipped {
+            clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 100%); 
+        }
+        .section-clip-bottom > .section-clipped {
+             clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%); 
+        }
+        .section-clip-both > .section-clipped {
+            clip-path: polygon(0 12%, 100% 0, 100% 88%, 0 100%); 
+        }
+
+        .hero-gradient-dynamic { 
+             background: linear-gradient(145deg, var(--primary-bg) 10%, var(--secondary-bg) 50%, #071023 90%);
+        }
+        .section-gradient-dynamic { 
+            background: linear-gradient(160deg, var(--secondary-bg) 0%, var(--primary-bg) 100%);
+        }
+        
+        #vision.parallax-bg { 
+            background-attachment: fixed; 
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover; 
+        }
+
+        .card-modern {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(12px);
+            border-radius: 20px; 
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .card-modern:hover {
+            transform: translateY(-12px) scale(1.04); 
+            box-shadow: 0 25px 50px var(--glow-color-teal), 0 0 120px var(--glow-color-cyan);
+        }
+
+        .accent-text-gradient {
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-cyan));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; text-fill-color: transparent;
+        }
+
+        .button-modern {
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-cyan));
+            color: var(--primary-bg); font-weight: 700; border-radius: 10px; 
+            padding: 0.85rem 2.25rem; 
+            transition: transform 0.2s ease-out, box-shadow 0.3s ease, background-position 0.5s ease;
+            box-shadow: 0 6px 20px rgba(0, 245, 212, 0.25); background-size: 200% auto; 
+        }
+        .button-modern:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 10px 30px rgba(0, 245, 212, 0.4); background-position: right center; 
+        }
+        .button-modern:active { 
+            transform: translateY(-2px) scale(0.98); box-shadow: 0 4px 15px rgba(0, 245, 212, 0.3);
+        }
+        
+        .animate-on-scroll {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .animate-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s !important; } .delay-2 { transition-delay: 0.2s !important; }
+        .delay-3 { transition-delay: 0.3s !important; } .delay-4 { transition-delay: 0.4s !important; }
+        .delay-5 { transition-delay: 0.5s !important; } .delay-6 { transition-delay: 0.6s !important; }
+
+        .img-logo-header { height: 50px; width: auto; filter: brightness(0) invert(1); }
+        .img-logo-hero { height: 130px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 0 15px var(--accent-teal)); }
+        .img-logo-footer { height: 40px; width: auto; filter: brightness(0) invert(1); }
+
+        .team-member-img-modern {
+            width: 150px; height: 150px; object-fit: cover; border-radius: 50%;
+            border: 5px solid var(--accent-teal); margin-bottom: 1.5rem; box-shadow: 0 0 25px var(--glow-color-teal);
+        }
+        
+        .value-icon-container {
+            width: 70px; height: 70px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-cyan));
+            box-shadow: 0 0 20px var(--glow-color-teal);
+        }
+        .value-icon-container svg { color: var(--primary-bg); width: 32px; height: 32px; }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--primary-bg); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(var(--accent-teal), var(--accent-cyan)); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(var(--accent-cyan), var(--accent-teal)); }
+        
+        html { scroll-padding-top: 90px; }
+
+        header { background-color: rgba(10, 25, 47, 0.85) !important; backdrop-filter: blur(16px); }
+        nav a.active-link { color: var(--accent-teal) !important; font-weight: 700 !important; text-shadow: 0 0 10px var(--accent-teal); }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="fixed top-0 left-0 right-0 z-50 shadow-2xl border-b border-[var(--border-color)]">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="https://png.pngtree.com/png-vector/20220630/ourmid/pngtree-polygon-brain-logo-template-png-image_5583871.png" alt="NeuroTwin Polygon Brain Logo" class="img-logo-header">
+            </div>
+            <nav class="space-x-3 md:space-x-5 text-sm md:text-base">
+                <a href="#home" class="text-[var(--text-medium)] hover:text-[var(--accent-teal)] transition-colors duration-300 font-medium">Home</a>
+                <a href="#mission" class="text-[var(--text-medium)] hover:text-[var(--accent-teal)] transition-colors duration-300 font-medium">Mission</a>
+                <a href="#vision" class="text-[var(--text-medium)] hover:text-[var(--accent-teal)] transition-colors duration-300 font-medium">Vision</a>
+                <a href="#values" class="text-[var(--text-medium)] hover:text-[var(--accent-teal)] transition-colors duration-300 font-medium">Values</a>
+                <a href="#team" class="text-[var(--text-medium)] hover:text-[var(--accent-teal)] transition-colors duration-300 font-medium">Team</a>
+                <a href="#contact" class="button-modern text-sm">Contact Us</a>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="min-h-screen flex items-center justify-center hero-gradient-dynamic pt-28 md:pt-24">
+        <canvas id="particle-canvas-hero" class="particle-canvas-bg"></canvas>
+        <div class="section-content-wrapper container mx-auto px-6 text-center">
+            <div class="animate-on-scroll">
+                <img src="https://png.pngtree.com/png-vector/20220630/ourmid/pngtree-polygon-brain-logo-template-png-image_5583871.png" alt="NeuroTwin Polygon Brain Logo" class="img-logo-hero mx-auto mb-10">
+                <h1 class="text-6xl md:text-8xl font-extrabold mb-6 accent-text-gradient">
+                    NeuroTwin
+                </h1>
+                <p class="text-xl md:text-2xl font-light mb-8 text-[var(--text-medium)] animate-on-scroll delay-1">
+                    PRESERVE YOUR EXPERTISE. SCALE YOUR REACH. AMPLIFY YOUR IMPACT.
+                </p>
+                <p class="max-w-3xl mx-auto text-lg text-[var(--text-dark)] mb-12 animate-on-scroll delay-2">
+                    NeuroTwin creates intelligent AI digital twins of your unique knowledge. We then seamlessly deploy these twins into your existing digital ecosystem&mdash;LMS, websites, apps, and more&mdash;to extend capabilities, automate processes, and share wisdom effectively.
+                </p>
+                <a href="#mission" class="button-modern animate-on-scroll delay-3">Discover How</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-outer-wrapper section-clip-bottom">
+      <section id="mission" class="section-clipped section-gradient-dynamic">
+          <canvas id="particle-canvas-mission" class="particle-canvas-bg"></canvas>
+          <div class="section-content-wrapper container mx-auto px-6">
+              <div class="text-center mb-16">
+                  <h2 class="text-4xl md:text-5xl font-bold mb-4 animate-on-scroll">Our <span class="accent-text-gradient">Mission</span></h2>
+                  <p class="text-lg text-[var(--text-dark)] max-w-3xl mx-auto animate-on-scroll delay-1">To empower you to scale your unique expertise by integrating AI twins where they deliver maximum value.</p>
+              </div>
+              <div class="max-w-4xl mx-auto text-center">
+                  <p class="text-xl md:text-2xl leading-relaxed text-[var(--text-medium)] animate-on-scroll delay-2">
+                      NeuroTwin provides AI digital twins designed to capture your knowledge and then deploys them directly into your operational environments. This enables you to extend influence, streamline work, and make a greater impact, seamlessly.
+                  </p>
+              </div>
+          </div>
+      </section>
+    </div>
+
+    <div class="section-outer-wrapper section-clip-both">
+      <section id="vision" class="section-clipped hero-gradient-dynamic parallax-bg" style="background-image: linear-gradient(rgba(10, 16, 31, 0.85), rgba(16, 24, 44, 0.92)), url('https://source.unsplash.com/random/1600x900/?abstract,technology,plexus');">
+          <canvas id="particle-canvas-vision" class="particle-canvas-bg"></canvas>
+          <div class="section-content-wrapper container mx-auto px-6">
+              <div class="text-center mb-16">
+                  <h2 class="text-4xl md:text-5xl font-bold mb-4 animate-on-scroll">Our <span class="accent-text-gradient">Vision</span></h2>
+                  <p class="text-lg text-[var(--text-dark)] max-w-3xl mx-auto animate-on-scroll delay-1">To be the premier AI platform for knowledge amplification and seamless ecosystem integration.</p>
+              </div>
+              <div class="max-w-4xl mx-auto text-center">
+                  <p class="text-xl md:text-2xl leading-relaxed text-[var(--text-medium)] animate-on-scroll delay-2">
+                      We envision a future where NeuroTwin leads in enabling individuals and organizations to digitize, integrate, and scale their expertise. This transforms how knowledge is utilized within their own platforms, fostering innovation and lasting influence.
+                  </p>
+              </div>
+          </div>
+      </section>
+    </div>
+
+    <div class="section-outer-wrapper section-clip-top">
+      <section id="values" class="section-clipped section-gradient-dynamic">
+          <canvas id="particle-canvas-values" class="particle-canvas-bg"></canvas>
+          <div class="section-content-wrapper container mx-auto px-6">
+              <div class="text-center mb-20">
+                  <h2 class="text-4xl md:text-5xl font-bold mb-4 animate-on-scroll">Our Core <span class="accent-text-gradient">Values</span></h2>
+                  <p class="text-lg text-[var(--text-dark)] max-w-3xl mx-auto animate-on-scroll delay-1">These principles guide every decision and every AI Twin we create and deploy.</p>
+              </div>
+              <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+                  <div class="card-modern p-6 text-center animate-on-scroll delay-2">
+                      <div class="value-icon-container flex items-center justify-center mx-auto mb-6">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM16.5 18.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM6.75 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z" /></svg>
+                      </div>
+                      <h3 class="text-2xl font-semibold mb-3 text-[var(--accent-teal)]">Authenticity</h3>
+                      <p class="text-[var(--text-dark)] leading-relaxed text-sm">We preserve the essence of your unique voice, values, and methods—never diluted or generalized.</p>
+                  </div>
+                  <div class="card-modern p-6 text-center animate-on-scroll delay-3">
+                      <div class="value-icon-container flex items-center justify-center mx-auto mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5h0l-6-6v-1.5m6 7.5V5.625M12 5.625v2.25m0 0h0m0 0l2.25 2.25M12 7.875l-2.25 2.25m0 0H5.625m2.25 0h2.25m0 0l2.25 2.25M12 10.125l-2.25 2.25M7.875 12l-2.25 2.25m0 0H12m2.25 0l2.25-2.25M12 14.625l2.25-2.25M13.875 12H12m1.875 0l2.25-2.25m0 0h2.25M12 18.75v-1.5m0 0h0M12 5.625h.008v.008H12V5.625z" /></svg>
+                      </div>
+                      <h3 class="text-2xl font-semibold mb-3 text-[var(--accent-teal)]">Innovation</h3>
+                      <p class="text-[var(--text-dark)] leading-relaxed text-sm">We harness cutting-edge AI for impactful knowledge transfer and seamless digital integration.</p>
+                  </div>
+                  <div class="card-modern p-6 text-center animate-on-scroll delay-4">
+                       <div class="value-icon-container flex items-center justify-center mx-auto mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                      </div>
+                      <h3 class="text-2xl font-semibold mb-3 text-[var(--accent-teal)]">Legacy</h3>
+                      <p class="text-[var(--text-dark)] leading-relaxed text-sm">We build lasting impact by capturing wisdom that transcends time and is deployed for infinite scale.</p>
+                  </div>
+                  <div class="card-modern p-6 text-center animate-on-scroll delay-5">
+                      <div class="value-icon-container flex items-center justify-center mx-auto mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" /></svg>
+                      </div>
+                      <h3 class="text-2xl font-semibold mb-3 text-[var(--accent-teal)]">Excellence</h3>
+                      <p class="text-[var(--text-dark)] leading-relaxed text-sm">Every AI Twin is built and deployed with precision, purpose, and unwavering commitment to quality.</p>
+                  </div>
+              </div>
+          </div>
+      </section>
+    </div>
+
+    <div class="section-outer-wrapper section-clip-both">
+      <section id="team" class="section-clipped hero-gradient-dynamic">
+          <canvas id="particle-canvas-team" class="particle-canvas-bg"></canvas>
+          <div class="section-content-wrapper container mx-auto px-6">
+              <div class="text-center mb-20">
+                  <h2 class="text-4xl md:text-5xl font-bold mb-4 animate-on-scroll">Our <span class="accent-text-gradient">Team</span></h2>
+                  <p class="text-lg text-[var(--text-dark)] max-w-3xl mx-auto animate-on-scroll delay-1">Meet the minds driving NeuroTwin's vision forward.</p>
+              </div>
+              <div class="grid md:grid-cols-2 gap-12 lg:gap-20 max-w-4xl mx-auto">
+                  <div class="card-modern p-8 text-center animate-on-scroll delay-2">
+                      <img src="https://placehold.co/256x256/10182C/00F5D4?text=RN&font=poppins" alt="Ryan Nichols" class="team-member-img-modern mx-auto">
+                      <h3 class="text-2xl font-semibold mb-1 text-[var(--accent-cyan)]">Ryan Nichols</h3>
+                      <p class="text-[var(--text-medium)] mb-3 font-medium">Managing Director</p>
+                      <p class="text-[var(--text-dark)] leading-relaxed text-sm">Ryan leads with a passion for transformative AI and its practical application in scaling human potential.</p>
+                  </div>
+                  <div class="card-modern p-8 text-center animate-on-scroll delay-3">
+                      <img src="https://placehold.co/256x256/10182C/00F5D4?text=AD&font=poppins" alt="Aaron Deangelo" class="team-member-img-modern mx-auto">
+                      <h3 class="text-2xl font-semibold mb-1 text-[var(--accent-cyan)]">Aaron Deangelo</h3>
+                      <p class="text-[var(--text-medium)] mb-3 font-medium">Managing Director</p>
+                      <p class="text-[var(--text-dark)] leading-relaxed text-sm">Aaron focuses on strategic growth and ensuring NeuroTwin's technology seamlessly integrates to solve real-world challenges.</p>
+                  </div>
+              </div>
+          </div>
+      </section>
+    </div>
+    
+    <div class="section-outer-wrapper section-clip-top" style="margin-bottom: -8rem;">
+      <section id="contact" class="section-clipped section-gradient-dynamic">
+          <canvas id="particle-canvas-contact" class="particle-canvas-bg"></canvas>
+          <div class="section-content-wrapper container mx-auto px-6 text-center">
+              <div class="animate-on-scroll">
+                  <h2 class="text-4xl md:text-5xl font-bold mb-6">Ready to <span class="accent-text-gradient">Amplify</span> Your Impact?</h2>
+                  <p class="text-lg text-[var(--text-dark)] max-w-2xl mx-auto mb-12 animate-on-scroll delay-1">
+                      Discover how NeuroTwin can help you scale your expertise and achieve more.
+                      Reach out today to explore the possibilities of integrated AI twins.
+                  </p>
+                  <form class="max-w-xl mx-auto space-y-6 animate-on-scroll delay-2" action="mailto:ryan@neuro-twin.com,muddy@neuro-twin.com,emily@neuro-twin.com,aaron@neuro-twin.com" method="POST" enctype="text/plain">
+                      <div class="flex flex-col sm:flex-row sm:space-x-6 space-y-6 sm:space-y-0">
+                          <input type="text" name="name" placeholder="Your Name" required class="w-full p-4 rounded-lg bg-[var(--secondary-bg)] border border-[var(--border-color)] focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent outline-none placeholder-[var(--text-dark)] transition-shadow duration-300 focus:shadow-lg focus:shadow-[var(--glow-color-teal)]">
+                          <input type="email" name="email" placeholder="Your Email" required class="w-full p-4 rounded-lg bg-[var(--secondary-bg)] border border-[var(--border-color)] focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent outline-none placeholder-[var(--text-dark)] transition-shadow duration-300 focus:shadow-lg focus:shadow-[var(--glow-color-teal)]">
+                      </div>
+                      <textarea name="message" placeholder="Your Message" rows="5" required class="w-full p-4 rounded-lg bg-[var(--secondary-bg)] border border-[var(--border-color)] focus:ring-2 focus:ring-[var(--accent-teal)] focus:border-transparent outline-none placeholder-[var(--text-dark)] transition-shadow duration-300 focus:shadow-lg focus:shadow-[var(--glow-color-teal)]"></textarea>
+                      <button type="submit" class="button-modern w-full sm:w-auto">Send Message</button>
+                  </form>
+              </div>
+          </div>
+      </section>
+    </div>
+
+    <footer class="py-16 hero-gradient-dynamic border-t border-[var(--border-color)] relative"> 
+        <div class="container mx-auto px-6 text-center text-[var(--text-dark)]">
+            <div class="flex justify-center items-center mb-6 animate-on-scroll">
+                 <img src="https://png.pngtree.com/png-vector/20220630/ourmid/pngtree-polygon-brain-logo-template-png-image_5583871.png" alt="NeuroTwin Polygon Brain Logo" class="img-logo-footer">
+            </div>
+            <p class="text-sm animate-on-scroll delay-1">&copy; <span id="currentYear"></span> NeuroTwin. All rights reserved.</p>
+            <p class="text-xs mt-2 animate-on-scroll delay-2">Your Expertise. Intelligently Scaled & Integrated.</p> 
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Intersection Observer for scroll animations
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observerCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('is-visible');
+            });
+        };
+        const scrollObserver = new IntersectionObserver(observerCallback, observerOptions);
+        document.querySelectorAll('.animate-on-scroll').forEach(el => scrollObserver.observe(el));
+        
+        // Smooth scroll & active nav state
+        const navLinks = document.querySelectorAll('nav a[href^="#"]');
+        const headerEl = document.querySelector('header');
+        let headerHeight = headerEl ? headerEl.offsetHeight : 70;
+
+        const updateHeaderHeight = () => { if (headerEl) headerHeight = headerEl.offsetHeight; };
+        window.addEventListener('load', updateHeaderHeight);
+        window.addEventListener('resize', updateHeaderHeight);
+
+        function updateActiveLink() {
+            let currentSectionId = 'home';
+            const sections = document.querySelectorAll('section[id]');
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - headerHeight - Math.max(100, window.innerHeight * 0.2);
+                if (window.pageYOffset >= sectionTop) currentSectionId = section.getAttribute('id');
+            });
+            if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 20) {
+                currentSectionId = sections.length > 0 ? sections[sections.length - 1].getAttribute('id') : 'home';
+            }
+            navLinks.forEach(link => {
+                link.classList.remove('active-link');
+                if (link.getAttribute('href') === `#${currentSectionId}`) link.classList.add('active-link');
+            });
+        }
+        window.addEventListener('scroll', updateActiveLink);
+        window.addEventListener('load', () => { updateHeaderHeight(); updateActiveLink(); });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetElement = document.querySelector(this.getAttribute('href'));
+                if (targetElement) {
+                    const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Particle Graph Animation Class
+        class ParticleGraph {
+            constructor(canvasId, isHero = false) {
+                this.canvas = document.getElementById(canvasId);
+                if (!this.canvas) { return; } 
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.isHero = isHero;
+                // Increased mouse radius for better interaction reach
+                this.mouse = { x: null, y: null, radius: this.isHero ? 180 : 100 }; 
+                // Increased connection radius for more lines
+                this.connectRadius = this.isHero ? 220 : 170; 
+                // Denser particles for a fuller graph
+                this.particleDensityFactor = this.isHero ? 5000 : 7000; 
+                this.animationFrameId = null;
+
+                this.setCanvasSize();
+                
+                this.canvas.addEventListener('mousemove', (event) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    this.mouse.x = event.clientX - rect.left;
+                    this.mouse.y = event.clientY - rect.top;
+                });
+                 this.canvas.addEventListener('mouseout', () => {
+                    this.mouse.x = null;
+                    this.mouse.y = null;
+                });
+
+                window.addEventListener('resize', () => {
+                    if(this.animationFrameId) { 
+                        this.setCanvasSize();
+                        this.initParticles(); 
+                    }
+                });
+            }
+
+            setCanvasSize() {
+                const parentSection = this.canvas.closest('section, footer');
+                if (parentSection) {
+                    this.canvas.width = parentSection.offsetWidth;
+                    this.canvas.height = parentSection.offsetHeight;
+                } else {
+                    this.canvas.width = window.innerWidth; 
+                    this.canvas.height = window.innerHeight;
+                }
+            }
+
+            initParticles() {
+                this.particles = [];
+                let numParticles = (this.canvas.width * this.canvas.height) / this.particleDensityFactor;
+                for (let i = 0; i < numParticles; i++) {
+                    let size = Math.random() * 1.7 + 0.7; // Slightly larger base size
+                    let x = Math.random() * this.canvas.width;
+                    let y = Math.random() * this.canvas.height;
+                    let dirX = (Math.random() - 0.5) * 0.8; // Slightly faster base drift
+                    let dirY = (Math.random() - 0.5) * 0.8;
+                    this.particles.push(new Particle(x, y, dirX, dirY, size, 'rgba(0, 245, 212, 0.8)', this.canvas, this.mouse, this.isHero));
+                }
+            }
+
+            connectParticles() {
+                for (let a = 0; a < this.particles.length; a++) {
+                    for (let b = a + 1; b < this.particles.length; b++) {
+                        let dx = this.particles[a].x - this.particles[b].x;
+                        let dy = this.particles[a].y - this.particles[b].y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < this.connectRadius) {
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(this.particles[a].x, this.particles[a].y);
+                            this.ctx.lineTo(this.particles[b].x, this.particles[b].y);
+                            // More visible lines
+                            this.ctx.strokeStyle = `rgba(0, 245, 212, ${Math.max(0.15, 0.95 - distance / this.connectRadius)})`; 
+                            this.ctx.lineWidth = 0.7; // Thicker lines
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            animate() {
+                this.animationFrameId = requestAnimationFrame(() => this.animate());
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                for (let i = 0; i < this.particles.length; i++) this.particles[i].update();
+                this.connectParticles();
+            }
+
+            start() {
+                if (!this.animationFrameId) { 
+                    this.setCanvasSize(); 
+                    this.initParticles(); 
+                    this.animate();
+                }
+            }
+            stop() {
+                 if (this.animationFrameId) {
+                    cancelAnimationFrame(this.animationFrameId);
+                    this.animationFrameId = null;
+                 }
+            }
+        }
+
+        class Particle { 
+            constructor(x, y, dirX, dirY, size, color, canvas, mouseRef, isHeroParticle) {
+                this.x = x; this.y = y; this.dirX = dirX; this.dirY = dirY;
+                this.size = size; this.maxSize = size + 0.6; this.minSize = size - 0.5; // Increased pulse range
+                this.color = color; this.canvas = canvas; this.ctx = canvas.getContext('2d');
+                this.baseX = this.x; this.baseY = this.y;
+                // Increased density for snappier mouse reaction
+                this.density = (Math.random() * (isHeroParticle ? 40 : 30)) + (isHeroParticle ? 20 : 15); 
+                this.mouse = mouseRef; 
+                this.isHeroParticle = isHeroParticle;
+                this.pulseDirection = 1;
+            }
+            draw() {
+                this.ctx.beginPath(); this.ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                this.ctx.fillStyle = this.color; this.ctx.fill();
+            }
+            update() {
+                // Pulsing effect
+                if (this.size >= this.maxSize || this.size <= this.minSize) this.pulseDirection *= -1;
+                this.size += this.pulseDirection * 0.025; // Faster pulse
+
+
+                let dxMouse = this.mouse.x - this.x;
+                let dyMouse = this.mouse.y - this.y;
+                let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+                
+                // Stronger push from mouse
+                let pushStrength = this.isHeroParticle ? 1.2 : 0.9; 
+
+                if (this.mouse.x !== null && distMouse < this.mouse.radius) { 
+                    let force = (this.mouse.radius - distMouse) / this.mouse.radius;
+                    this.x -= (dxMouse / distMouse) * force * this.density * pushStrength;
+                    this.y -= (dyMouse / distMouse) * force * this.density * pushStrength;
+                } else {
+                    // Faster return to base
+                    if (this.x !== this.baseX) this.x -= (this.x - this.baseX) / (this.isHeroParticle ? 8 : 12);
+                    if (this.y !== this.baseY) this.y -= (this.y - this.baseY) / (this.isHeroParticle ? 8 : 12);
+                    // Slightly faster ambient drift
+                    this.x += this.dirX * 0.18; 
+                    this.y += this.dirY * 0.18;
+                }
+
+                // Boundary checks
+                if (this.x - this.size < 0) { this.x = this.size; this.dirX *= -1; }
+                else if (this.x + this.size > this.canvas.width) { this.x = this.canvas.width - this.size; this.dirX *= -1; }
+                if (this.y - this.size < 0) { this.y = this.size; this.dirY *= -1; }
+                else if (this.y + this.size > this.canvas.height) { this.y = this.canvas.height - this.size; this.dirY *= -1; }
+                
+                this.draw();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvasConfigs = [
+                { id: 'particle-canvas-hero', isHero: true },
+                { id: 'particle-canvas-mission', isHero: false },
+                { id: 'particle-canvas-vision', isHero: false },
+                { id: 'particle-canvas-values', isHero: false },
+                { id: 'particle-canvas-team', isHero: false },
+                { id: 'particle-canvas-contact', isHero: false }
+            ];
+
+            canvasConfigs.forEach(config => {
+                const canvasElement = document.getElementById(config.id);
+                if (canvasElement) {
+                    const graphInstance = new ParticleGraph(config.id, config.isHero);
+                    const sectionElement = canvasElement.closest('section'); 
+                    if (sectionElement) {
+                        const sectionObserver = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    graphInstance.start();
+                                } else {
+                                    graphInstance.stop();
+                                }
+                            });
+                        }, { threshold: 0.01 }); 
+                        sectionObserver.observe(sectionElement);
+                    }
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>
+
