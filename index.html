@@ -139,10 +139,10 @@
         .delay-3 { transition-delay: 0.3s !important; } .delay-4 { transition-delay: 0.4s !important; }
         .delay-5 { transition-delay: 0.5s !important; } .delay-6 { transition-delay: 0.6s !important; }
 
-        /* Logo CSS - Filters REINSTATED for this dark logo */
-        .img-logo-header { height: 50px; width: auto; filter: brightness(0) invert(1); }
-        .img-logo-hero { height: 130px; width: auto; filter: brightness(0) invert(1) drop-shadow(0 0 15px var(--accent-teal)); }
-        .img-logo-footer { height: 40px; width: auto; filter: brightness(0) invert(1); }
+        /* Logo CSS - Filters Removed as new logo is likely a PNG with transparency or designed for dark backgrounds */
+        .img-logo-header { height: 50px; width: auto; /* filter removed */ }
+        .img-logo-hero { height: 130px; width: auto; /* filter removed */ }
+        .img-logo-footer { height: 40px; width: auto; /* filter removed */ }
 
 
         .team-member-img-modern {
@@ -174,7 +174,7 @@
     <header class="fixed top-0 left-0 right-0 z-50 shadow-2xl border-b border-[var(--border-color)]">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center">
-                <img src="https://png.pngtree.com/png-vector/20220630/ourmid/pngtree-polygon-brain-logo-template-png-image_5583871.png" alt="NeuroTwin Polygon Brain Logo" class="img-logo-header">
+                <img src="neurotwin-logo.png" alt="NeuroTwin Logo" class="img-logo-header">
             </div>
             <nav class="space-x-3 md:space-x-5 text-sm md:text-base">
                 <a href="#home" class="text-[var(--text-medium)] hover:text-[var(--accent-teal)] transition-colors duration-300 font-medium">Home</a>
@@ -191,7 +191,7 @@
         <canvas id="particle-canvas-hero" class="particle-canvas-bg"></canvas>
         <div class="section-content-wrapper container mx-auto px-6 text-center">
             <div class="animate-on-scroll">
-                <img src="https://png.pngtree.com/png-vector/20220630/ourmid/pngtree-polygon-brain-logo-template-png-image_5583871.png" alt="NeuroTwin Polygon Brain Logo" class="img-logo-hero mx-auto mb-10">
+                 <img src="neurotwin-logo.png" alt="NeuroTwin Logo" class="img-logo-hero mx-auto mb-10">
                 <h1 class="text-6xl md:text-8xl font-extrabold mb-6 accent-text-gradient">
                     NeuroTwin
                 </h1>
@@ -346,7 +346,7 @@
     <footer class="py-16 hero-gradient-dynamic border-t border-[var(--border-color)] relative"> 
         <div class="container mx-auto px-6 text-center text-[var(--text-dark)]">
             <div class="flex justify-center items-center mb-6 animate-on-scroll">
-                 <img src="https://w7.pngwing.com/pngs/42/568/png-transparent-emory-university-brain-neuroscience-technology-management-brain-blue-people-behavior.png" alt="NeuroTwin Digital Brain Logo" class="img-logo-footer">
+                 <img src="neurotwin-logo.png" alt="NeuroTwin Logo" class="img-logo-footer">
             </div>
             <p class="text-sm animate-on-scroll delay-1">&copy; <span id="currentYear"></span> NeuroTwin. All rights reserved.</p>
             <p class="text-xs mt-2 animate-on-scroll delay-2">Your Expertise. Intelligently Scaled & Integrated.</p> 
